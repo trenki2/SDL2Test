@@ -32,7 +32,7 @@
 #
 #
 # Don't forget to include SDLmain.h and SDLmain.m your project for the
-# OS X framework based version.  (Other versions link to -lSDLmain which
+# OS X framework based version.  (Other versions link to -lSDL2main which
 # this module will try to find on your behalf.) Also for OS X, this
 # module will automatically add the -framework Cocoa on your behalf.
 #
@@ -42,7 +42,7 @@
 # configuration and no SDL2_LIBRARY, it means CMake did not find your SDL
 # library (SDL.dll, libsdl.so, SDL.framework, etc).  Set
 # SDL2_LIBRARY_TEMP to point to your SDL library, and configure again.
-# Similarly, if you see an empty SDLMAIN_LIBRARY, you should set this
+# Similarly, if you see an empty SDL2MAIN_LIBRARY, you should set this
 # value as appropriate.  These values are used to generate the final
 # SDL2_LIBRARY variable, but when these values are unset, SDL2_LIBRARY
 # does not get created.
@@ -57,7 +57,7 @@
 # controlled/consistent search behavior.  Added new modifications to
 # recognize OS X frameworks and additional Unix paths (FreeBSD, etc).
 # Also corrected the header search path to follow "proper" SDL
-# guidelines.  Added a search for SDLmain which is needed by some
+# guidelines.  Added a search for SDL2main which is needed by some
 # platforms.  Added a search for threads which is needed by some
 # platforms.  Added needed compile switches for MinGW.
 #
@@ -106,8 +106,8 @@ set_property(CACHE SDL2_LIBRARY_TEMP PROPERTY TYPE INTERNAL)
 if(NOT SDL2_BUILDING_LIBRARY)
   if(NOT SDL2_INCLUDE_DIR MATCHES ".framework")
     # Non-OS X framework versions expect you to also dynamically link to
-    # SDLmain. This is mainly for Windows and OS X. Other (Unix) platforms
-    # seem to provide SDLmain for compatibility even though they don't
+    # SDL2main. This is mainly for Windows and OS X. Other (Unix) platforms
+    # seem to provide SDL2main for compatibility even though they don't
     # necessarily need it.
     find_library(SDL2MAIN_LIBRARY
       NAMES SDL2main
@@ -133,17 +133,17 @@ if(NOT APPLE)
 endif()
 
 # MinGW needs an additional link flag, -mwindows
-# It's total link flags should look like -lmingw32 -lSDLmain -lSDL -mwindows
+# It's total link flags should look like -lmingw32 -lSDL2main -lSDL2 -mwindows
 if(MINGW)
   set(MINGW32_LIBRARY mingw32 "-mwindows" CACHE STRING "link flags for MinGW")
 endif()
 
 if(SDL2_LIBRARY_TEMP)
-  # For SDLmain
+  # For SDL2main
   if(SDL2MAIN_LIBRARY AND NOT SDL2_BUILDING_LIBRARY)
-    list(FIND SDL2_LIBRARY_TEMP "${SDLMAIN_LIBRARY}" _SDL2_MAIN_INDEX)
+    list(FIND SDL2_LIBRARY_TEMP "${SDL2MAIN_LIBRARY}" _SDL2_MAIN_INDEX)
     if(_SDL2_MAIN_INDEX EQUAL -1)
-      set(SDL2_LIBRARY_TEMP "${SDLMAIN_LIBRARY}" ${SDL2_LIBRARY_TEMP})
+      set(SDL2_LIBRARY_TEMP "${SDL2MAIN_LIBRARY}" ${SDL2_LIBRARY_TEMP})
     endif()
     unset(_SDL2_MAIN_INDEX)
   endif()
